@@ -1,8 +1,8 @@
-# T-DAT-901-LYO_6 - Frontend and Backend Setup Guide
+# Frontend and Backend Setup Guide
 
 ## Overview
 
-Welcome to the T-DAT-901 project! This repository contains the codebase for both the frontend and backend components. The frontend is built using React.js with TypeScript, while the backend is powered by Django REST API. This guide will help you get up and running with the project.
+This repository contains the codebase for both the frontend and backend components. The frontend is built using React.js with TypeScript, while the backend is powered by Django REST API. This guide will help you get up and running with the project.
 
 ## Table of Contents
 
