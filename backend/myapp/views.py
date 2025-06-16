@@ -108,9 +108,9 @@ class FetchCoinPrice(APIView):
                 soup = BeautifulSoup(response.text, 'html.parser')
 
                 options = Options()
-                options.add_argument("--headless")
-                # service = Service('C:/Users/taouf/Documents/Epitech/T-DAT-901-LYO_6/backend/msedgedriver.exe')
-                service = Service('C:/Users/yevtu/Documents/Epitech/T-DAT-901-LYO_6/backend/msedgedriver.exe')
+                # options.add_argument("--headless")
+                # options.add_argument("--window-size=1920,1080")
+                service = Service('C:\Projets\Tools\edgedriver_win64\msedgedriver.exe')
                 browser = webdriver.Edge(service=service, options=options)
                 browser.get(url)
 
@@ -119,25 +119,30 @@ class FetchCoinPrice(APIView):
                     return "Loading data..." not in driver.page_source
 
                 # Wait for the custom condition to be met
-                wait = WebDriverWait(browser, 30)
+                wait = WebDriverWait(browser, 15)
                 wait.until(data_loaded)
-                button = browser.find_element(By.XPATH, "//*[@id='__next']/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[1]/div[1]/button[1]")
 
+                history_location = "//*[@id='__next']//div[contains(@class, 'main-content')]//div[contains(@class, 'history')]"
+                history = wait.until(EC.presence_of_element_located((By.XPATH, history_location)))
+                
+                button = wait.until(EC.element_to_be_clickable((By.XPATH, history_location + "/div[1]/div[1]/button[1]"))) # j'attends que le bouton soit cliquable
+                
                 try:
-                    button.click()
+                    browser.execute_script("arguments[0].click();", button)
                     print("Button clicked successfully.")
-                    wait = WebDriverWait(browser, 30)
-                    li_element = WebDriverWait(browser, 30).until(
-                        EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/div[2]/div[1]/div[2]/div/div/div/div[2]/div/div[1]/div[2]/div/div[1]/div/div/div[1]/div[2]/ul/li[5]'))
-                    )
+
+                    tipy_content_location = "//div[@id='tippy-1']//div[contains (@class, 'tippy-content')]"
+                    li_location = history_location + tipy_content_location + "/div/div/div[1]/div[2]/ul/li[5]"
+
+                    wait.until(EC.visibility_of_element_located((By.XPATH, li_location)))
+                    li_element = wait.until(EC.element_to_be_clickable((By.XPATH, li_location))) #365 Days
 
                     try:
                         browser.execute_script("arguments[0].click();", li_element)
                         print("365 Days clicked successfully.")
 
-
                         # Find and click the "Continue" button
-                        continue_button = browser.find_element(By.XPATH, "//button[contains(@class, 'bcCCXI')]")
+                        continue_button = history.find_element(By.XPATH, tipy_content_location + "/div/div/div[2]/span/button")
 
                         try:
                             # continue_button.click()
@@ -163,13 +168,13 @@ class FetchCoinPrice(APIView):
                             return Response(list_of_dicts)
 
                         except Exception as e:
-                            print("Error clicking the button: ", str(e))
+                            print("Error 3 clicking the button: ", str(e))
 
                     except Exception as e:
-                        print(f"Error clicking the button: {str(e)}")
+                        print(f"Error 2 clicking the button: {str(e)}")
 
                 except Exception as e:
-                    print(f"Error clicking the button: {str(e)}")
+                    print(f"Error 1 clicking the button: {str(e)}")
             else:
                 print(f"Failed to retrieve the page. Status code: {response.status_code}")   
                 

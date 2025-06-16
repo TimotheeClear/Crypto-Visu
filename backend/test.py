@@ -33,7 +33,7 @@ try:
 
         options = Options()
         # options.add_argument("--headless")
-        service = Service('C:/Users/yevtu/Documents/Epitech/T-DAT-901-LYO_6/backend/msedgedriver.exe')
+        service = Service('C:\Projets\Tools\edgedriver_win64\msedgedriver.exe')
         browser = webdriver.Edge(service=service, options=options)
         browser.get(url)
 
